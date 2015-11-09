@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import models.UserDAO;
+import modules.MobileDatabaseHandler;
+
 public class GiftlyMainActivity extends AppCompatActivity {
 
     @Override
@@ -17,6 +20,10 @@ public class GiftlyMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_giftly_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        MobileDatabaseHandler db = new MobileDatabaseHandler(this, null, null, 1);
+        db.addUser(new UserDAO(1, 1, "Alec@gmail.com", "Alec", "Klein", "password"));
+        System.out.println(db.databaseToString());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
