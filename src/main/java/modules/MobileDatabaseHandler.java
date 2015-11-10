@@ -87,15 +87,36 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
     }
 
     public void addFriend(FriendDAO friend){
-
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_F_FRIENDID, friend.getFriendid());
+        cv.put(COLUMN_F_USERID, friend.getUserid());
+        cv.put(COLUMN_F_NAME, friend.getName());
+        cv.put(COLUMN_F_DOB, friend.getDob());
+        cv.put(COLUMN_F_STATE, friend.getState());
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(TABLE_FRIEND, null, cv);
+        System.out.println("supposedly friend is added");
     }
 
     public void addGift(GiftDAO gift){
-
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_G_ASIN, gift.getAsin());
+        cv.put(COLUMN_G_FRIENDID, gift.getFriendid());
+        cv.put(COLUMN_G_DESCRIPTION, gift.getDescription());
+        cv.put(COLUMN_G_STATE, gift.getState());
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(TABLE_GIFT, null, cv);
+        System.out.println("supposedly gift is added");
     }
 
     public void addInterest(InterestDAO interest){
-
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_I_INTERESTNAME, interest.getInterestName());
+        cv.put(COLUMN_I_FRIENDID, interest.getFriendid());
+        cv.put(COLUMN_I_STATE, interest.getState());
+        SQLiteDatabase db = getWritableDatabase();
+        db.insert(TABLE_INTEREST, null, cv);
+        System.out.println("supposedly interest is added");
     }
 
     public String databaseToString(){
