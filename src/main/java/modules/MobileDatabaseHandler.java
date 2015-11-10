@@ -38,7 +38,7 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
     public static final String TABLE_GIFT = "Gift";
     public static final String COLUMN_G_ASIN = "asin";
     public static final String COLUMN_G_FRIENDID = "friendid";
-    public static final String COLUMN_G_DESCRIPTION = "description";
+    public static final String COLUMN_G_TITLE = "title";
     public static final String COLUMN_G_STATE = "state";
 
     public static final String TABLE_INTEREST = "Interest";
@@ -60,6 +60,24 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
                 COLUMN_U_LNAME+" TEXT,"+
                 COLUMN_U_PASSWORD+" TEXT,"+
                 COLUMN_U_STATE+" INTEGER);";
+        db.execSQL(query);
+        query = "CREATE TABLE "+TABLE_FRIEND+"("+
+                COLUMN_F_FRIENDID+" INTEGER PRIMARY KEY,"+
+                COLUMN_F_USERID+" INTEGER REFERENCES User(USERID),"+
+                COLUMN_F_NAME+" TEXT,"+
+                COLUMN_F_DOB+" TEXT,"+
+                COLUMN_F_STATE+" INTEGER);";
+        db.execSQL(query);
+        query = "CREATE TABLE "+TABLE_GIFT+"("+
+                COLUMN_G_ASIN+" TEXT PRIMARY KEY,"+
+                COLUMN_G_FRIENDID+" INTEGER REFERENCES Friend(FRIENDID),"+
+                COLUMN_G_TITLE+" TEXT,"+
+                COLUMN_G_STATE+" INTEGER);";
+        db.execSQL(query);
+        query = "CREATE TABLE "+TABLE_INTEREST+"("+
+                COLUMN_I_INTERESTNAME+" TEXT,"+
+                COLUMN_I_FRIENDID+" INTEGER REFERENCES Friend(FRIENDID),"+
+                COLUMN_I_STATE+" INTEGER);";
         db.execSQL(query);
         System.out.println("db created?");
     }
@@ -102,7 +120,7 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_G_ASIN, gift.getAsin());
         cv.put(COLUMN_G_FRIENDID, gift.getFriendid());
-        cv.put(COLUMN_G_DESCRIPTION, gift.getDescription());
+        cv.put(COLUMN_G_TITLE, gift.getTitle());
         cv.put(COLUMN_G_STATE, gift.getState());
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_GIFT, null, cv);
@@ -122,7 +140,7 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
     public String databaseToString(){
         String dbString = " ";
         SQLiteDatabase db = getWritableDatabase();
-        String query = "Select * From " + TABLE_USER + " Where 1";
+        String query = "Select * From " + TABLE_FRIEND + " Where 1";
         Cursor c = db.rawQuery(query, null);
 
 //        while(!c.isAfterLast()){
@@ -133,7 +151,7 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
 
         if(c != null && c.moveToFirst()){
             do{
-                dbString = c.getString(c.getColumnIndex("email"));
+                dbString = c.getString(c.getColumnIndex("name"));
             }while(c.moveToNext());
             c.close();
         }

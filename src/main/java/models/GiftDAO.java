@@ -7,13 +7,13 @@ public class GiftDAO {
 
     String asin;
     long friendid;
-    String description;
+    String title;
     int state;
 
-    public GiftDAO(String asin, long friendid, String description, int state) {
+    public GiftDAO(String asin, long friendid, String title, int state) {
         this.asin = asin;
         this.friendid = friendid;
-        this.description = description;
+        this.title = title;
         this.state = state;
     }
 
@@ -33,12 +33,12 @@ public class GiftDAO {
         this.friendid = friendid;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTitle() {
+        return title;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescription(String title) {
+        this.title = title;
     }
 
     public int getState() {
