@@ -19,6 +19,13 @@ public class FriendDAO {
         this.state = state;
     }
 
+    public FriendDAO(long friendid, long userid, String name, String dob) {
+        this.friendid = friendid;
+        this.userid = userid;
+        this.name = name;
+        this.dob = dob;
+    }
+
     public long getFriendid() {
         return friendid;
     }

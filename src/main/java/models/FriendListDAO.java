@@ -8,6 +8,12 @@ import java.util.List;
  */
 public class FriendListDAO {
 
+    private List<FriendDAO> friendList = new ArrayList<FriendDAO>();
+
+    public FriendListDAO(List<FriendDAO> friendList) {
+        this.friendList = friendList;
+    }
+
     public List<FriendDAO> getFriendList() {
         return friendList;
     }
@@ -15,7 +21,4 @@ public class FriendListDAO {
     public void setFriendList(List<FriendDAO> friendList) {
         this.friendList = friendList;
     }
-
-    private List<FriendDAO> friendList = new ArrayList<FriendDAO>();
-
 }

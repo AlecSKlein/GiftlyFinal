@@ -6,7 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import models.FriendDAO;
+import models.FriendListDAO;
 import models.GiftDAO;
 import models.InterestDAO;
 import models.InterestListDAO;
@@ -104,6 +108,33 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
         System.out.println("supposedly user is added");
     }
 
+    /*
+    * params
+    * email: primary key
+    */
+    public UserDAO getUser(String email){
+        String query = "SELECT "+COLUMN_U_USERID+","+COLUMN_U_FNAME+","+COLUMN_U_LNAME+" FROM "+TABLE_USER+" WHERE "+COLUMN_U_EMAIL+"='"+email+"';";
+        UserDAO user = null;
+        long userid = -1;
+        String fname = null, lname = null;
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery(query, null);
+        if(c != null && c.moveToFirst()){
+            userid = c.getLong(c.getColumnIndex(COLUMN_U_USERID));
+            fname = c.getString(c.getColumnIndex(COLUMN_U_FNAME));
+            lname = c.getString(c.getColumnIndex(COLUMN_U_LNAME));
+            c.close();
+        }
+        try{
+            if(userid!=-1 || fname.equals(null) || lname.equals(null)){
+                user = new UserDAO(userid, email, fname, lname);
+            }
+        } catch(Exception e){
+            System.out.println("oopsy");
+        }
+        return user;
+    }
+
     public void addFriend(FriendDAO friend){
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_F_FRIENDID, friend.getFriendid());
@@ -114,6 +145,38 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_FRIEND, null, cv);
         System.out.println("supposedly friend is added");
+    }
+
+    /*
+    * params
+    * userid: foreign key
+    */
+    public FriendListDAO getFriends(long userid){
+        String query = "SELECT "+COLUMN_F_FRIENDID+","+COLUMN_F_NAME+","+COLUMN_F_DOB+" FROM "+TABLE_FRIEND+" WHERE "+COLUMN_F_USERID+"="+userid+";";
+        System.out.println(query);
+        long friendid = -1;
+        String name = null, dob = null;
+        List<FriendDAO> friendList = new ArrayList<FriendDAO>();
+        System.out.println("list got");
+        SQLiteDatabase db = getWritableDatabase();
+        System.out.println("DB got");
+        Cursor c = db.rawQuery(query, null);
+        System.out.println("Cursor query");
+        if(c != null && c.moveToFirst()){
+            do{
+                friendid = c.getInt(c.getColumnIndex(COLUMN_F_FRIENDID));
+                name = c.getString(c.getColumnIndex(COLUMN_F_NAME));
+                dob = c.getString(c.getColumnIndex(COLUMN_F_DOB));
+                if(friendid == -1 || name.equals(null) || dob.equals(null))
+                {
+                    System.out.println("Bad friend data, pass");
+                }
+                else {
+                    friendList.add(new FriendDAO(friendid, userid, name, dob));
+                }
+            } while(c.moveToNext());
+        }
+        return new FriendListDAO(friendList);
     }
 
     public void addGift(GiftDAO gift){
@@ -137,34 +200,7 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
         System.out.println("supposedly interest is added");
     }
 
-    /*
-    * params
-    * email: primary key
-    */
-    public UserDAO getUser(String email){
-        String query = "SELECT "+COLUMN_U_USERID+","+COLUMN_U_FNAME+","+COLUMN_U_LNAME+" FROM "+TABLE_USER+" WHERE EMAIL='"+email+"';";
-        UserDAO user = null;
-        long userid = -1;
-        String fname = null, lname = null;
-        SQLiteDatabase db = getWritableDatabase();
-        Cursor c = db.rawQuery(query, null);
-        if(c != null && c.moveToFirst()){
-            do{
-                userid = c.getInt(c.getColumnIndex(COLUMN_U_USERID));
-                fname = c.getString(c.getColumnIndex(COLUMN_U_FNAME));
-                lname = c.getString(c.getColumnIndex(COLUMN_U_LNAME));
-            }while(c.moveToNext());
-            c.close();
-        }
-        try{
-            if(userid!=-1 || fname.equals(null) || lname.equals(null)){
-                user = new UserDAO(userid, email, fname, lname);
-            }
-        } catch(Exception e){
-            System.out.println("oopsy");
-        }
-        return user;
-    }
+
 
     public String databaseToString(){
         String dbString = " ";

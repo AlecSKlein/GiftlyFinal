@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import models.FriendDAO;
+import models.FriendListDAO;
 import models.UserDAO;
 import modules.MobileDatabaseHandler;
 
@@ -25,7 +26,14 @@ public class GiftlyMainActivity extends AppCompatActivity {
         MobileDatabaseHandler db = new MobileDatabaseHandler(this, null, null, 1);
         db.addUser(new UserDAO(1, 1, "Alec@gmail.com", "Alec", "Klein", "password"));
         db.addFriend(new FriendDAO(1, 1, "Alec Klein", "05/29/1993", 1));
+        db.addFriend(new FriendDAO(2, 1, "Alec Klein2", "06/29/1993", 1));
+        db.addFriend(new FriendDAO(3, 1, "Alec Klein3", "07/29/1993", 1));
         UserDAO test = db.getUser("Alec@gmail.com");
+        FriendListDAO test2 = db.getFriends(1);
+        for(FriendDAO friend : test2.getFriendList())
+        {
+            System.out.println(friend.getName());
+        }
         System.out.println("Email = " + test.getEmail());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
