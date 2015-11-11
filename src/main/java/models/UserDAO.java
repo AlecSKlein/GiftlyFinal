@@ -12,6 +12,7 @@ public class UserDAO {
     String lname;
     String password;
 
+    //For server storage
     public UserDAO(long userid, int state, String email, String fname, String lname, String password) {
         this.userid = userid;
         this.state = state;
@@ -21,9 +22,18 @@ public class UserDAO {
         this.password = password;
     }
 
-    public UserDAO(long userid, String email) {
+    //For local database storage and fetching
+    public UserDAO(long userid, String email, String fname, String lname) {
         this.userid = userid;
         this.email = email;
+        this.fname = fname;
+        this.lname = lname;
+    }
+
+    //For login auth
+    public UserDAO(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public String getPassword() {

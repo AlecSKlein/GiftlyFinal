@@ -54,8 +54,8 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE "+TABLE_USER+"("+
-                COLUMN_U_USERID+" INTEGER PRIMARY KEY,"+
-                COLUMN_U_EMAIL+" TEXT,"+
+                COLUMN_U_USERID+" INTEGER UNIQUE,"+
+                COLUMN_U_EMAIL+" TEXT PRIMARY KEY,"+
                 COLUMN_U_FNAME+" TEXT,"+
                 COLUMN_U_LNAME+" TEXT,"+
                 COLUMN_U_PASSWORD+" TEXT,"+
@@ -75,7 +75,7 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
                 COLUMN_G_STATE+" INTEGER);";
         db.execSQL(query);
         query = "CREATE TABLE "+TABLE_INTEREST+"("+
-                COLUMN_I_INTERESTNAME+" TEXT,"+
+                COLUMN_I_INTERESTNAME+" TEXT PRIMARY KEY,"+
                 COLUMN_I_FRIENDID+" INTEGER REFERENCES Friend(FRIENDID),"+
                 COLUMN_I_STATE+" INTEGER);";
         db.execSQL(query);
@@ -135,6 +135,35 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_INTEREST, null, cv);
         System.out.println("supposedly interest is added");
+    }
+
+    /*
+    * params
+    * email: primary key
+    */
+    public UserDAO getUser(String email){
+        String query = "SELECT "+COLUMN_U_USERID+","+COLUMN_U_FNAME+","+COLUMN_U_LNAME+" FROM "+TABLE_USER+" WHERE EMAIL='"+email+"';";
+        UserDAO user = null;
+        long userid = -1;
+        String fname = null, lname = null;
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery(query, null);
+        if(c != null && c.moveToFirst()){
+            do{
+                userid = c.getInt(c.getColumnIndex(COLUMN_U_USERID));
+                fname = c.getString(c.getColumnIndex(COLUMN_U_FNAME));
+                lname = c.getString(c.getColumnIndex(COLUMN_U_LNAME));
+            }while(c.moveToNext());
+            c.close();
+        }
+        try{
+            if(userid!=-1 || fname.equals(null) || lname.equals(null)){
+                user = new UserDAO(userid, email, fname, lname);
+            }
+        } catch(Exception e){
+            System.out.println("oopsy");
+        }
+        return user;
     }
 
     public String databaseToString(){
