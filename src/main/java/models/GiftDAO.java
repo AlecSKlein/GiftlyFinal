@@ -17,6 +17,12 @@ public class GiftDAO {
         this.state = state;
     }
 
+    public GiftDAO(String asin, long friendid, String title) {
+        this.asin = asin;
+        this.friendid = friendid;
+        this.title = title;
+    }
+
     public String getAsin() {
         return asin;
     }

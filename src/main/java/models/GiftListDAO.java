@@ -8,6 +8,12 @@ import java.util.List;
  */
 public class GiftListDAO {
 
+    private List<GiftDAO> giftList = new ArrayList<GiftDAO>();
+
+    public GiftListDAO(List<GiftDAO> giftList) {
+        this.giftList = giftList;
+    }
+
     public List<GiftDAO> getGiftList() {
         return giftList;
     }
@@ -16,5 +22,4 @@ public class GiftListDAO {
         this.giftList = giftList;
     }
 
-    private List<GiftDAO> giftList = new ArrayList<GiftDAO>();
 }

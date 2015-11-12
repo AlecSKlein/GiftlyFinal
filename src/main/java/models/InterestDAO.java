@@ -15,6 +15,11 @@ public class InterestDAO {
         this.state = state;
     }
 
+    public InterestDAO(String interestName, long friendid) {
+        this.interestName = interestName;
+        this.friendid = friendid;
+    }
+
     public String getInterestName() {
         return interestName;
     }

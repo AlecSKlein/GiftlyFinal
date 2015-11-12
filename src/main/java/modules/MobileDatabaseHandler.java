@@ -12,6 +12,7 @@ import java.util.List;
 import models.FriendDAO;
 import models.FriendListDAO;
 import models.GiftDAO;
+import models.GiftListDAO;
 import models.InterestDAO;
 import models.InterestListDAO;
 import models.UserDAO;
@@ -164,9 +165,15 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
         System.out.println("Cursor query");
         if(c != null && c.moveToFirst()){
             do{
-                friendid = c.getInt(c.getColumnIndex(COLUMN_F_FRIENDID));
-                name = c.getString(c.getColumnIndex(COLUMN_F_NAME));
-                dob = c.getString(c.getColumnIndex(COLUMN_F_DOB));
+                friendid = -1;
+                name = dob = null;
+                try{
+                    friendid = c.getInt(c.getColumnIndex(COLUMN_F_FRIENDID));
+                    name = c.getString(c.getColumnIndex(COLUMN_F_NAME));
+                    dob = c.getString(c.getColumnIndex(COLUMN_F_DOB));
+                } catch(Exception e){
+
+                }
                 if(friendid == -1 || name.equals(null) || dob.equals(null))
                 {
                     System.out.println("Bad friend data, pass");
@@ -190,6 +197,32 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
         System.out.println("supposedly gift is added");
     }
 
+    public GiftListDAO getGifts(long friendid){
+        String query = "SELECT "+COLUMN_G_ASIN+","+COLUMN_G_TITLE+" FROM "+TABLE_GIFT+" WHERE "+COLUMN_G_FRIENDID+"="+friendid+";";
+        List<GiftDAO> giftList = new ArrayList<GiftDAO>();
+        String asin = null, title = null;
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery(query, null);
+        if(c != null && c.moveToFirst()){
+            do{
+                asin = title = null;
+                try{
+                    asin = c.getString(c.getColumnIndex(COLUMN_G_ASIN));
+                    title = c.getString(c.getColumnIndex(COLUMN_G_TITLE));
+                } catch(Exception e){
+
+                }
+                if(asin.equals(null) || title.equals(null)){
+                    System.out.println("Bad gift data, pass");
+                }
+                else {
+                    giftList.add(new GiftDAO(asin, friendid, title));
+                }
+            } while(c.moveToNext());
+        }
+        return new GiftListDAO(giftList);
+    }
+
     public void addInterest(InterestDAO interest){
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_I_INTERESTNAME, interest.getInterestName());
@@ -200,7 +233,30 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
         System.out.println("supposedly interest is added");
     }
 
+    public InterestListDAO getInterests(long friendid){
+        String query = "SELECT "+COLUMN_I_INTERESTNAME+" FROM "+TABLE_INTEREST+" WHERE "+COLUMN_I_FRIENDID+"="+friendid+";";
+        List<InterestDAO> interestList = new ArrayList<InterestDAO>();
+        String interestName = null;
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery(query, null);
+        if(c != null && c.moveToFirst()){
+            do{
+                interestName = null;
+                try{
+                    interestName = c.getString(c.getColumnIndex(COLUMN_I_INTERESTNAME));
+                } catch(Exception e){
 
+                }
+                if(interestName == null){
+                    System.out.println("Bad interest data, pass");
+                }
+                else {
+                    interestList.add(new InterestDAO(interestName, friendid));
+                }
+            } while(c.moveToNext());
+        }
+        return new InterestListDAO(interestList);
+    }
 
     public String databaseToString(){
         String dbString = " ";

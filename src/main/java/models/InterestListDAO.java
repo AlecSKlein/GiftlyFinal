@@ -16,5 +16,9 @@ public class InterestListDAO {
         this.interestList = interestList;
     }
 
+    public InterestListDAO(List<InterestDAO> interestList) {
+        this.interestList = interestList;
+    }
+
     private List<InterestDAO> interestList = new ArrayList<InterestDAO>();
 }
