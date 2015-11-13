@@ -11,6 +11,10 @@ import android.view.MenuItem;
 
 import models.FriendDAO;
 import models.FriendListDAO;
+import models.GiftDAO;
+import models.GiftListDAO;
+import models.InterestDAO;
+import models.InterestListDAO;
 import models.UserDAO;
 import modules.MobileDatabaseHandler;
 
@@ -28,11 +32,22 @@ public class GiftlyMainActivity extends AppCompatActivity {
         db.addFriend(new FriendDAO(1, 1, "Alec Klein", "05/29/1993", 1));
         db.addFriend(new FriendDAO(2, 1, "Alec Klein2", "06/29/1993", 1));
         db.addFriend(new FriendDAO(3, 1, "Alec Klein3", "07/29/1993", 1));
+        db.addGift(new GiftDAO("test", 2, "test"));
+        db.addGift(new GiftDAO("also test", 3, "test2"));
+        db.addInterest(new InterestDAO("Balls", 2));
+        db.addInterest(new InterestDAO("Ding Dongs", 3));
         UserDAO test = db.getUser("Alec@gmail.com");
         FriendListDAO test2 = db.getFriends(1);
-        for(FriendDAO friend : test2.getFriendList())
-        {
+        InterestListDAO test3 = db.getInterests(2);
+        GiftListDAO test4 = db.getGifts(3);
+        for(FriendDAO friend : test2.getFriendList()) {
             System.out.println(friend.getName());
+        }
+        for(InterestDAO interest : test3.getInterestList()){
+            System.out.println(interest.getInterestName());
+        }
+        for(GiftDAO gift : test4.getGiftList()){
+            System.out.println(gift.getAsin());
         }
         System.out.println("Email = " + test.getEmail());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
