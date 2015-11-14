@@ -37,6 +37,7 @@ public class GiftlyMainActivity extends AppCompatActivity {
         db.addInterest(new InterestDAO("Balls", 2));
         db.addInterest(new InterestDAO("Ding Dongs", 3));
         UserDAO test = db.getUser("Alec@gmail.com");
+        //Testing Git from mac
         FriendListDAO test2 = db.getFriends(1);
         InterestListDAO test3 = db.getInterests(2);
         GiftListDAO test4 = db.getGifts(3);
