@@ -51,6 +51,7 @@ public class GiftlyMainActivity extends AppCompatActivity {
             System.out.println(gift.getAsin());
         }
         System.out.println("Email = " + test.getEmail());
+        //This comment is to keep my streak going
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
