@@ -1,22 +1,22 @@
 package smallmoon.giftly;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import models.FriendDAO;
-import models.FriendListDAO;
-import models.GiftDAO;
-import models.GiftListDAO;
-import models.InterestDAO;
-import models.InterestListDAO;
+import com.google.gson.Gson;
+
 import models.UserDAO;
-import modules.MobileDatabaseHandler;
+import rest.RestClient;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Response;
 
 public class GiftlyMainActivity extends AppCompatActivity {
 
@@ -26,32 +26,10 @@ public class GiftlyMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_giftly_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        RestClient.GiftlyApiInterface service = RestClient.getClient();
+        UserDAO user = new UserDAO(15, 1, "test12giftly.us", "alec", "klein", "password");
+        registerUser(service, user);
 
-        MobileDatabaseHandler db = new MobileDatabaseHandler(this, null, null, 1);
-        db.addUser(new UserDAO(1, 1, "Alec@gmail.com", "Alec", "Klein", "password"));
-        db.addFriend(new FriendDAO(1, 1, "Alec Klein", "05/29/1993", 1));
-        db.addFriend(new FriendDAO(2, 1, "Alec Klein2", "06/29/1993", 1));
-        db.addFriend(new FriendDAO(3, 1, "Alec Klein3", "07/29/1993", 1));
-        db.addGift(new GiftDAO("test", 2, "test"));
-        db.addGift(new GiftDAO("also test", 3, "test2"));
-        db.addInterest(new InterestDAO("Balls", 2));
-        db.addInterest(new InterestDAO("Ding Dongs", 3));
-        UserDAO test = db.getUser("Alec@gmail.com");
-        //Testing Git from mac
-        FriendListDAO test2 = db.getFriends(1);
-        InterestListDAO test3 = db.getInterests(2);
-        GiftListDAO test4 = db.getGifts(3);
-        for(FriendDAO friend : test2.getFriendList()) {
-            System.out.println(friend.getName());
-        }
-        for(InterestDAO interest : test3.getInterestList()){
-            System.out.println(interest.getInterestName());
-        }
-        for(GiftDAO gift : test4.getGiftList()){
-            System.out.println(gift.getAsin());
-        }
-        System.out.println("Email = " + test.getEmail());
-        //This comment is to keep my streak going
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,5 +60,31 @@ public class GiftlyMainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void registerUser(RestClient.GiftlyApiInterface service, UserDAO user)
+    {
+        final ProgressDialog dialog = ProgressDialog.show(this, "", "loading...");
+        Call<UserDAO> userRegisterCall = service.registerUser(user);
+        userRegisterCall.enqueue(new Callback<UserDAO>() {
+            @Override
+            public void onResponse(Response<UserDAO> response) {
+                dialog.dismiss();
+                System.out.println("Status Code = " + response.code());
+                System.out.println("Dialog dismissed, success?");
+                if (response.isSuccess()) {
+                    System.out.println("Success");
+                    UserDAO userResponse = response.body();
+                    System.out.println("response = " + new Gson().toJson(userResponse));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                dialog.dismiss();
+                System.out.println("Dialog dismissed, failure");
+                System.out.println(t.toString());
+            }
+        });
     }
 }
