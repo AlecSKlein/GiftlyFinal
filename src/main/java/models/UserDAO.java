@@ -11,6 +11,7 @@ public class UserDAO {
     String fname;
     String lname;
     String password;
+    boolean authenticated;
 
     //For server storage
     public UserDAO(long userid, int state, String email, String fname, String lname, String password) {
@@ -82,5 +83,13 @@ public class UserDAO {
 
     public void setLname(String lname) {
         this.lname = lname;
+    }
+
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
     }
 }

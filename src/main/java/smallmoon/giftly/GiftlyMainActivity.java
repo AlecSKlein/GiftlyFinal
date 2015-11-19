@@ -27,8 +27,9 @@ public class GiftlyMainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         RestClient.GiftlyApiInterface service = RestClient.getClient();
-        UserDAO user = new UserDAO(15, 1, "test12giftly.us", "alec", "klein", "password");
-        registerUser(service, user);
+        UserDAO user = new UserDAO(15, 1, "test13giftly.us", "alec", "klein", "password");
+        //registerUser(service, user);
+        loginUser(service, user);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -62,11 +63,35 @@ public class GiftlyMainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void registerUser(RestClient.GiftlyApiInterface service, UserDAO user)
-    {
+    public void registerUser(RestClient.GiftlyApiInterface service, UserDAO user) {
         final ProgressDialog dialog = ProgressDialog.show(this, "", "loading...");
         Call<UserDAO> userRegisterCall = service.registerUser(user);
         userRegisterCall.enqueue(new Callback<UserDAO>() {
+            @Override
+            public void onResponse(Response<UserDAO> response) {
+                dialog.dismiss();
+                System.out.println("Status Code = " + response.code());
+                System.out.println("Dialog dismissed, success?");
+                if (response.isSuccess()) {
+                    System.out.println("Success");
+                    UserDAO userResponse = response.body();
+                    System.out.println("response = " + new Gson().toJson(userResponse));
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                dialog.dismiss();
+                System.out.println("Dialog dismissed, failure");
+                System.out.println(t.toString());
+            }
+        });
+    }
+
+    public void loginUser(RestClient.GiftlyApiInterface service, UserDAO user) {
+        final ProgressDialog dialog = ProgressDialog.show(this, "", "loading...");
+        Call<UserDAO> userLoginCall = service.loginUser(user);
+        userLoginCall.enqueue(new Callback<UserDAO>() {
             @Override
             public void onResponse(Response<UserDAO> response) {
                 dialog.dismiss();
