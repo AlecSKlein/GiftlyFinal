@@ -54,6 +54,9 @@ public class RestClient {
         @POST("/api/user/loginuser")
         Call<UserDAO> loginUser(@Body UserDAO user);
 
+        @POST("/api/user/addfriend")
+        Call<FriendDAO> addFriend(@Body UserDAO user, @Body FriendDAO friend);
+
         @POST("/api/user/getallfriends")
         Call<FriendListDAO> getAllFriends(@Body UserDAO user);
 
