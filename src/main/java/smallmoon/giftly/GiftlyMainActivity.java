@@ -30,6 +30,7 @@ public class GiftlyMainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         RestClient.GiftlyApiInterface service = RestClient.getClient();
         UserDAO user = new UserDAO(0, 1, "test13giftly.us", "alec", "klein", "password");
+        FriendDAO friend = new FriendDAO(0, 0, "Alec Klein", "05/29/1993");
         registerUser(service, user);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
