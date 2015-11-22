@@ -129,6 +129,7 @@ public class MobileDatabaseHandler extends SQLiteOpenHelper{
         try{
             if(userid!=-1 || fname.equals(null) || lname.equals(null)){
                 user = new UserDAO(userid, email, fname, lname);
+                System.out.println("From DB " + user.getEmail());
             }
         } catch(Exception e){
             System.out.println("oopsy");
